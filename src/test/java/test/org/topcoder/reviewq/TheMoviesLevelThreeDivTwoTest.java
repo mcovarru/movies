@@ -1,6 +1,7 @@
 package test.org.topcoder.reviewq;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo;
 import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo.Movie;
@@ -44,29 +45,26 @@ public class TheMoviesLevelThreeDivTwoTest
       this.movieQueuer = null;
     }
     
-    private class IdHolder {
-      public int [] johnIds;
-      public int [] brusIds;
+    
+    private int [] getIds(List movieList) {
+      int [] ret = new int[movieList.size()];
       
+      for (int i = 0; i < ret.length; i++)
+        ret[i] = ((Movie) movieList.get(i)).getId();
       
+      return ret;
     }
     
-    public IdHolder getIds(TheMoviesLevelThreeDivTwo.Distributor distrib) {
-      IdHolder holder = new IdHolder();
-      
-      holder.johnIds = new int [distrib.getJohnList().size()];
-      holder.brusIds = new int [distrib.getBrusList().size()];
-      
-      
-      for (int i = 0; i < holder.johnIds.length; i++)
-        holder.johnIds[i] = ((Movie) distrib.getJohnList().get(i)).getId();
-      
-      for (int i = 0; i < holder.brusIds.length; i++)
-        holder.brusIds[i] = ((Movie) distrib.getBrusList().get(i)).getId();
-      
-      return holder;
+    
+    private int [] getJohnIds(TheMoviesLevelThreeDivTwo.Distribution dist) {
+      return getIds(dist.getJohnList());
     }
     
+    private int [] getBrusIds(TheMoviesLevelThreeDivTwo.Distribution dist) {
+      return getIds(dist.getBrusList());
+    }
+    
+
     
     public void testDistributor() {
       
@@ -79,59 +77,40 @@ public class TheMoviesLevelThreeDivTwoTest
       TheMoviesLevelThreeDivTwo.Distributor distrib =
         new TheMoviesLevelThreeDivTwo.Distributor(movies);
       
-
-      IdHolder holder;
-
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {}, holder.brusIds));
+      int [] [] johnIds = new int [] [] {
+          {0, 1, 2},  // 0 0 0
+          {1, 2},     // 0 0 1
+          {0, 2},     // 0 1 0
+          {2},        // 0 1 1
+          {0, 1},     // 1 0 0
+          {1},        // 1 0 1
+          {0},        // 1 1 0
+          {}          // 1 1 1
+      };
       
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {1, 2}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {0}, holder.brusIds));
+      int [] [] brusIds = new int [] [] {
+          {},         // 0 0 0
+          {0},        // 0 0 1
+          {1},        // 0 1 0
+          {0, 1},     // 0 1 1
+          {2},        // 1 0 0
+          {0, 2},     // 1 0 1
+          {1, 2},     // 1 1 0
+          {0, 1, 2}   // 1 1 1
+      };      
       
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
 
-      assertTrue(Arrays.equals(new int [] {0, 2}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {1}, holder.brusIds));
+      for (int i = 0; i < Math.pow(2, NUM_MOVIES); i++) {
+        assertTrue(distrib.hasNext());
+        TheMoviesLevelThreeDivTwo.Distribution dist = distrib.next();
+        assertNotNull(dist);
+        assertTrue(Arrays.equals(johnIds[i], getJohnIds(dist)));
+        assertTrue(Arrays.equals(brusIds[i], getBrusIds(dist)));        
+      }
       
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {2}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {0, 1}, holder.brusIds));
       
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {0, 1}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {2}, holder.brusIds));
-
+      assertFalse(distrib.hasNext());
       
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {1}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {0, 2}, holder.brusIds));
-
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {0}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {1, 2}, holder.brusIds));
-
-      assertTrue(distrib.next());
-      holder = getIds(distrib);
-
-      assertTrue(Arrays.equals(new int [] {}, holder.johnIds));
-      assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.brusIds));
-      
-      assertFalse(distrib.next());
       
     }
 

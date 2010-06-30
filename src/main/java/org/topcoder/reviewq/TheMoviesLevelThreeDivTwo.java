@@ -47,6 +47,20 @@ public class TheMoviesLevelThreeDivTwo
     }
     
 
+    public static class Distribution {
+      private List johnList = new ArrayList();
+      private List brusList = new ArrayList();
+      
+      public List getJohnList() {
+        return johnList;
+      }
+
+      public List getBrusList() {
+        return brusList;
+      }
+      
+    }
+    
     
     public static class Distributor {
       
@@ -58,52 +72,37 @@ public class TheMoviesLevelThreeDivTwo
       
       private long current = 0;
       
-      private List johnList;
       
-      private List brusList;
+      public boolean hasNext() {
+        return current < Math.pow(2, canonicalMovies.length);
+      }
       
-      public List getJohnList() {
-        return johnList;
-      }
-
-      public List getBrusList() {
-        return brusList;
-      }
-
-      public boolean next() {
+      
+      public Distribution next() {
         
-        if (current == Math.pow(2, canonicalMovies.length)) return false;
+        if (current >= Math.pow(2, canonicalMovies.length)) 
+          throw new RuntimeException("no more distributions!");
         
-        johnList = new ArrayList();
-        brusList = new ArrayList();
+
+        Distribution distribution = new Distribution();
         
         for (int i = 0; i < canonicalMovies.length; i++) {
           if ((current & (1 << i)) == 0)
-            johnList.add(canonicalMovies[i]);
+            distribution.getJohnList().add(canonicalMovies[i]);
           else
-            brusList.add(canonicalMovies[i]);
+            distribution.getBrusList().add(canonicalMovies[i]);
           
         }
         
         current++;
-        return true;
+        return distribution;
         
       }
       
     }
-
-
-
     
-    
-    public Movie[] worksHelper(Movie [] movies, int i, int depth) {
-      if (depth == movies.length) return movies;
-      movies[depth] = movies[i % movies.length];
-      return worksHelper(movies, i + 1, depth + 1);
 
-    }
-    
-    
+   
     public int find(int [] john, int [] brus) {
       
 
