@@ -131,6 +131,8 @@ public class TheMoviesLevelThreeDivTwoTest
       assertTrue(Arrays.equals(new int [] {}, holder.johnIds));
       assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.brusIds));
       
+      assertFalse(distrib.next());
+      
     }
 
     /**
