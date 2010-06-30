@@ -46,11 +46,11 @@ public class TheMoviesLevelThreeDivTwoTest
     }
     
     
-    private int [] getIds(List movieList) {
+    private int [] getIds(List<Movie> movieList) {
       int [] ret = new int[movieList.size()];
       
       for (int i = 0; i < ret.length; i++)
-        ret[i] = ((Movie) movieList.get(i)).getId();
+        ret[i] = movieList.get(i).getId();
       
       return ret;
     }

@@ -1,6 +1,7 @@
 package org.topcoder.reviewq;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,39 +49,51 @@ public class TheMoviesLevelThreeDivTwo
     
 
     public static class Distribution {
-      private List johnList = new ArrayList();
-      private List brusList = new ArrayList();
+      private List<Movie> johnList = new ArrayList<Movie>();
+      private List<Movie> brusList = new ArrayList<Movie>();
       
-      public List getJohnList() {
+      public List<Movie> getJohnList() {
         return johnList;
       }
 
-      public List getBrusList() {
+      public List<Movie> getBrusList() {
         return brusList;
       }
+      
+      public boolean works() {
+        return false;
+      }      
       
     }
     
     
-    public static class Distributor {
+    public static class Distributor implements Iterable<Distribution> {
       
       private Movie[] canonicalMovies;
+      
+
+      private long numDistributions;
+            
             
       public Distributor(Movie [] canonicalMovies) {
-        this.canonicalMovies = canonicalMovies;  
+        this.canonicalMovies = canonicalMovies;
+        
+        // calculate this once, doing Math.pow all the time can't 
+        // be efficient and it's not like the answer changes
+        this.numDistributions = Math.round(Math.pow(2, this.canonicalMovies.length));
       }
       
       private long current = 0;
       
       
       public boolean hasNext() {
-        return current < Math.pow(2, canonicalMovies.length);
+        return current < this.numDistributions;
       }
       
       
       public Distribution next() {
         
-        if (current >= Math.pow(2, canonicalMovies.length)) 
+        if (current >= numDistributions) 
           throw new RuntimeException("no more distributions!");
         
 
@@ -98,9 +111,31 @@ public class TheMoviesLevelThreeDivTwo
         return distribution;
         
       }
+
+
+      public Iterator<Distribution> iterator() {
+       
+        return new Iterator<Distribution>() {
+
+          public boolean hasNext() {
+            return Distributor.this.hasNext();
+          }
+
+          public Distribution next() {
+            return Distributor.this.next();
+          }
+
+          public void remove() {
+            throw new UnsupportedOperationException("remove not implemented");
+          }
+          
+        };
+      }
       
     }
-    
+
+
+
 
    
     public int find(int [] john, int [] brus) {
@@ -109,8 +144,17 @@ public class TheMoviesLevelThreeDivTwo
       Movie [] movies = new Movie[john.length]; 
       for (int i = 0; i < john.length; i++)
         movies[i] = new Movie(i, john[i], brus[i]);
-
+      
+      
       Distributor distributor = new Distributor(movies);
-      return 3;
+      
+      int working = 0;
+      
+      while (distributor.hasNext()) {
+        Distribution dist = distributor.next();
+        if (dist.works())
+          working++;
+      }
+      return working;
     }
 }
