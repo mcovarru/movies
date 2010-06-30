@@ -79,12 +79,58 @@ public class TheMoviesLevelThreeDivTwoTest
       TheMoviesLevelThreeDivTwo.Distributor distrib =
         new TheMoviesLevelThreeDivTwo.Distributor(movies);
       
-      assertTrue(distrib.next());
 
-      IdHolder holder = getIds(distrib);
+      IdHolder holder;
+
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
 
       assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.johnIds));
       assertTrue(Arrays.equals(new int [] {}, holder.brusIds));
+      
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {1, 2}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {0}, holder.brusIds));
+      
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {0, 2}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {1}, holder.brusIds));
+      
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {2}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {0, 1}, holder.brusIds));
+      
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {0, 1}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {2}, holder.brusIds));
+
+      
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {1}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {0, 2}, holder.brusIds));
+
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {0}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {1, 2}, holder.brusIds));
+
+      assertTrue(distrib.next());
+      holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.brusIds));
+      
     }
 
     /**
