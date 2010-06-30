@@ -1,6 +1,9 @@
 package test.org.topcoder.reviewq;
 
+import java.util.Arrays;
+
 import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo;
+import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo.Movie;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -39,6 +42,49 @@ public class TheMoviesLevelThreeDivTwoTest
     
     public void tearDown() {
       this.movieQueuer = null;
+    }
+    
+    private class IdHolder {
+      public int [] johnIds;
+      public int [] brusIds;
+      
+      
+    }
+    
+    public IdHolder getIds(TheMoviesLevelThreeDivTwo.Distributor distrib) {
+      IdHolder holder = new IdHolder();
+      
+      holder.johnIds = new int [distrib.getJohnList().size()];
+      holder.brusIds = new int [distrib.getBrusList().size()];
+      
+      
+      for (int i = 0; i < holder.johnIds.length; i++)
+        holder.johnIds[i] = ((Movie) distrib.getJohnList().get(i)).getId();
+      
+      for (int i = 0; i < holder.brusIds.length; i++)
+        holder.brusIds[i] = ((Movie) distrib.getBrusList().get(i)).getId();
+      
+      return holder;
+    }
+    
+    
+    public void testDistributor() {
+      
+      final int NUM_MOVIES = 3;
+      Movie [] movies = new Movie[NUM_MOVIES];
+      
+      for (int i = 0; i < NUM_MOVIES; i++)
+        movies[i] = new Movie(i, 0, 0);
+      
+      TheMoviesLevelThreeDivTwo.Distributor distrib =
+        new TheMoviesLevelThreeDivTwo.Distributor(movies);
+      
+      assertTrue(distrib.next());
+
+      IdHolder holder = getIds(distrib);
+
+      assertTrue(Arrays.equals(new int [] {0, 1, 2}, holder.johnIds));
+      assertTrue(Arrays.equals(new int [] {}, holder.brusIds));
     }
 
     /**
