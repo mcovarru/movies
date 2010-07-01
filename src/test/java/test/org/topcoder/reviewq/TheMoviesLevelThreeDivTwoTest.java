@@ -1,9 +1,11 @@
 package test.org.topcoder.reviewq;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo;
+import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo.Distribution;
 import org.topcoder.reviewq.TheMoviesLevelThreeDivTwo.Movie;
 
 import junit.framework.Test;
@@ -100,16 +102,17 @@ public class TheMoviesLevelThreeDivTwoTest
       };      
       
 
+      Iterator<Distribution> iter = distrib.iterator();
       for (int i = 0; i < Math.pow(2, NUM_MOVIES); i++) {
-        assertTrue(distrib.hasNext());
-        TheMoviesLevelThreeDivTwo.Distribution dist = distrib.next();
+        assertTrue(iter.hasNext());
+        TheMoviesLevelThreeDivTwo.Distribution dist = iter.next();
         assertNotNull(dist);
         assertTrue(Arrays.equals(johnIds[i], getJohnIds(dist)));
         assertTrue(Arrays.equals(brusIds[i], getBrusIds(dist)));        
       }
       
       
-      assertFalse(distrib.hasNext());
+      assertFalse(iter.hasNext());
       
       
     }

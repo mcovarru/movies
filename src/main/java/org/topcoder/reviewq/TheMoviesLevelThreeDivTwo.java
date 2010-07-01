@@ -85,45 +85,32 @@ public class TheMoviesLevelThreeDivTwo
       
       private long current = 0;
       
-      
-      public boolean hasNext() {
-        return current < this.numDistributions;
-      }
-      
-      
-      public Distribution next() {
-        
-        if (current >= numDistributions) 
-          throw new RuntimeException("no more distributions!");
-        
-
-        Distribution distribution = new Distribution();
-        
-        for (int i = 0; i < canonicalMovies.length; i++) {
-          if ((current & (1 << i)) == 0)
-            distribution.getJohnList().add(canonicalMovies[i]);
-          else
-            distribution.getBrusList().add(canonicalMovies[i]);
-          
-        }
-        
-        current++;
-        return distribution;
-        
-      }
-
 
       public Iterator<Distribution> iterator() {
        
         return new Iterator<Distribution>() {
 
           public boolean hasNext() {
-            return Distributor.this.hasNext();
+            return current < numDistributions;
           }
 
           public Distribution next() {
-            return Distributor.this.next();
-          }
+            if (current >= numDistributions) 
+              throw new RuntimeException("no more distributions!");
+            
+
+            Distribution distribution = new Distribution();
+            
+            for (int i = 0; i < canonicalMovies.length; i++) {
+              if ((current & (1 << i)) == 0)
+                distribution.getJohnList().add(canonicalMovies[i]);
+              else
+                distribution.getBrusList().add(canonicalMovies[i]);
+              
+            }
+            
+            current++;
+            return distribution;          }
 
           public void remove() {
             throw new UnsupportedOperationException("remove not implemented");
@@ -145,16 +132,13 @@ public class TheMoviesLevelThreeDivTwo
       for (int i = 0; i < john.length; i++)
         movies[i] = new Movie(i, john[i], brus[i]);
       
-      
-      Distributor distributor = new Distributor(movies);
-      
       int working = 0;
       
-      while (distributor.hasNext()) {
-        Distribution dist = distributor.next();
+      for (Distribution dist : new Distributor(movies)) {
         if (dist.works())
           working++;
       }
+      
       return working;
     }
 }
