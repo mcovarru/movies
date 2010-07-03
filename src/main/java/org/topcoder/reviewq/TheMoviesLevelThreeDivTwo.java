@@ -61,7 +61,71 @@ public class TheMoviesLevelThreeDivTwo
       }
       
       public boolean works() {
-        return false;
+        int numMovies = brusList.size() + johnList.size();
+        
+        Movie [] johnq = new Movie[numMovies];
+        Movie [] brusq = new Movie[numMovies];
+        
+        int johnp = 0, brusp = 0;
+        int bruse = brusList.size(), johne = johnList.size();
+        
+        johnList.toArray(johnq);
+        brusList.toArray(brusq);
+
+        int brust = 0, johnt = 0;
+ 
+        
+        boolean okay = true;
+        while (johnp != numMovies && brusp != numMovies) {
+          if (johnq[johnp] == null) {
+            okay = false;
+            break;
+          }
+          
+          if (brusq[brusp] == null) {
+            okay = false;
+            break;
+          }
+          
+
+          
+          // how much time to tick off
+          int johndiff = johnq[johnp].johnTime - johnt;
+          int brusdiff = brusq[brusp].brusTime - brust;
+          
+          // john done with a movie
+          if (johndiff < brusdiff) {
+            brust += johndiff;
+            johnt = 0;
+
+            if (bruse < brusq.length) brusq[bruse] = johnq[johnp];
+            bruse++;
+            johnp++;
+          }
+          // brus done with a movie
+          else if (johndiff > brusdiff) {
+            johnt += brusdiff;
+            brust = 0;
+
+            if (johne < johnq.length) johnq[johne] = brusq[brusp];
+            johne++;
+            brusp++;
+            
+          }
+          // tie
+          else {
+            brust = johnt = 0;
+            if (bruse < brusq.length) brusq[bruse] = johnq[johnp];
+            if (johne < johnq.length) johnq[johne] = brusq[brusp];
+            johne++; bruse++;
+            johnp++; brusp++;
+          }
+          
+          
+        }
+        
+        return okay;
+        
       }      
       
     }
@@ -128,7 +192,8 @@ public class TheMoviesLevelThreeDivTwo
     public int find(int [] john, int [] brus) {
       
 
-      Movie [] movies = new Movie[john.length]; 
+      Movie [] movies = new Movie[john.length];
+      
       for (int i = 0; i < john.length; i++)
         movies[i] = new Movie(i, john[i], brus[i]);
       

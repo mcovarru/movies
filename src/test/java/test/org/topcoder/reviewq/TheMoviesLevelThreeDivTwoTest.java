@@ -124,7 +124,7 @@ public class TheMoviesLevelThreeDivTwoTest
      * returns 2
      */
     public void test0() {
-      
+      assertEquals(2, movieQueuer.find(new int [] {4, 4}, new int [] {4, 4}));
     }
     
     /**
@@ -134,6 +134,7 @@ public class TheMoviesLevelThreeDivTwoTest
      * returns 1
      */
     public void test1() {
+      assertEquals(1, movieQueuer.find(new int [] {1, 4}, new int [] {4, 2}));
       
     }
     
@@ -145,7 +146,7 @@ public class TheMoviesLevelThreeDivTwoTest
      * returns 3
      */
     public void test2() {
-      
+      assertEquals(3, movieQueuer.find(new int [] {10, 10, 10, 10}, new int [] {1, 1, 1, 10}));
     }
     
     
@@ -156,6 +157,6 @@ public class TheMoviesLevelThreeDivTwoTest
      * returns 98
      */
     public void test3() {
-      
+      assertEquals(98, movieQueuer.find(new int [] {1, 2, 3, 4, 5, 6, 7}, new int [] {7, 6, 5, 4, 3, 2, 1}));
     }
 }
