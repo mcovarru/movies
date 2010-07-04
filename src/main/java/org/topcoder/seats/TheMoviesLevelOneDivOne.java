@@ -2,6 +2,7 @@ package org.topcoder.seats;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 
 public class TheMoviesLevelOneDivOne {
@@ -36,13 +37,13 @@ public class TheMoviesLevelOneDivOne {
 
     private int rowNumber;
     private Seat[] seats;
-    private int numSeats;
+    private int numSeatsPerRow;
     
 
     public Row(int rowNumber, Seat[] seats, int numSeatsPerRow) {
       this.rowNumber = rowNumber;
       this.seats = seats;
-      this.numSeats = numSeatsPerRow;
+      this.numSeatsPerRow = numSeatsPerRow;
     }
 
 
@@ -65,13 +66,17 @@ public class TheMoviesLevelOneDivOne {
         // add 2 since we want a pair of seats
         currentThreshold = seat.seat + 2;        
         
-        if (!seatIterator.hasNext() && seat.seat > currentThreshold) {
-          count += seat.seat - currentThreshold;
+        if (!seatIterator.hasNext()) {
+          if (seat.seat > currentThreshold)
+            count += seat.seat - currentThreshold;
+          else if (seat.seat + 2 <= numSeatsPerRow)
+            count += (numSeatsPerRow - seat.seat - 1);
+            
         }
 
       }
       
-      if (seat == null) count = numSeats - 1;
+      if (seat == null) count = numSeatsPerRow - 1;
       
       return count;
     }
@@ -89,13 +94,18 @@ public class TheMoviesLevelOneDivOne {
   
   public class SeatInRowIterator implements Iterator<Seat> {
 
-    private int current = -1;
+    private int current;
     private Seat[] seats;
     private int rowNumber;
     
     public SeatInRowIterator(Seat [] seats, int rowNumber) {
       this.seats = seats;
       this.rowNumber = rowNumber;
+      current = 0;
+      while (current < seats.length && seats[current].row < rowNumber)
+        current++;
+      // one too far
+      current--;
     }
 
     @Override
@@ -105,7 +115,8 @@ public class TheMoviesLevelOneDivOne {
 
     @Override
     public Seat next() {
-      if (!hasNext()) throw new RuntimeException("no more seats in row");
+      if (!hasNext())
+        throw new NoSuchElementException();
       current++;
       return seats[current];
     }
@@ -125,20 +136,23 @@ public class TheMoviesLevelOneDivOne {
 
     private int numSeatsPerRow;
 
-    public RowIterator(Seat [] seats, int numSeatsPerRow) {
+    private int numRows;
+
+    public RowIterator(Seat [] seats, int numRows, int numSeatsPerRow) {
       this.seats = seats;
+      this.numRows = numRows;
       this.numSeatsPerRow = numSeatsPerRow;
     }
 
     @Override
     public boolean hasNext() {
-      return current + 1 < seats.length;
+      return current + 1 < numRows;
     }
 
     @Override
     public Row next() {
       if (!hasNext())
-        throw new RuntimeException("no more elements");
+        throw new NoSuchElementException();
       
       current++;
       return new Row(current + 1, seats, numSeatsPerRow);
@@ -165,7 +179,7 @@ public class TheMoviesLevelOneDivOne {
     
     int count = 0;
     
-    Iterator<Row> rowIterator = new RowIterator(seats, numSeatsPerRow);
+    Iterator<Row> rowIterator = new RowIterator(seats, numRows, numSeatsPerRow);
     
     while (rowIterator.hasNext()) { 
       Row row = rowIterator.next();
