@@ -33,7 +33,7 @@ public class TheMoviesLevelOneDivOne {
   }
   
   
-  public class Row implements Iterable<Seat> {
+  public class Row {
 
     private int rowNumber;
     private Seat[] seats;
@@ -49,15 +49,11 @@ public class TheMoviesLevelOneDivOne {
 
     public int count() {
 
-      Iterator<Seat> seatIterator = iterator();
-      
-      if (!seatIterator.hasNext())
-        return numSeatsPerRow - 1;
-      
       int count = 0;      
-      
       int minimumVacantSeatNumber = 3;
-      
+
+      Iterator<Seat> seatIterator = new SeatInRowIterator(seats, rowNumber);
+
       while (seatIterator.hasNext()) {
         
         Seat seat = seatIterator.next();
@@ -70,32 +66,19 @@ public class TheMoviesLevelOneDivOne {
         // on this row)
         minimumVacantSeatNumber = seat.seatNumber + 3;        
         
-        // any more seats on this row?
-        if (!seatIterator.hasNext()) {
-
-          // to handle the case of the end of the row, think of there being a 
-          // final phantom seat after the real final seat, and this phantom
-          // final seat is filled.
-          int phantomFinalSeatPosition = numSeatsPerRow + 1;
-          if (minimumVacantSeatNumber <= phantomFinalSeatPosition)
-            // yes, add those pairs to our count
-            count += (phantomFinalSeatPosition - minimumVacantSeatNumber + 1);
-            
-        }
-
       }
+      
+      // to handle the case of the end of the row, think of there being a 
+      // final phantom seat after the real final seat, and this phantom
+      // final seat is filled.
+      int phantomFinalSeatPosition = numSeatsPerRow + 1;
+      if (minimumVacantSeatNumber <= phantomFinalSeatPosition)
+        count += (phantomFinalSeatPosition - minimumVacantSeatNumber + 1);
+      
       
       return count;
     }
 
-
-    @Override
-    public Iterator<Seat> iterator() {
-      return new SeatInRowIterator(seats, rowNumber);
-    }
-
-
-    
   }
   
   
