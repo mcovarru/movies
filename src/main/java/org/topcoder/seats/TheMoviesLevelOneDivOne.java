@@ -25,7 +25,6 @@ public class TheMoviesLevelOneDivOne {
       return 442 * row + 26 * seatNumber;
     }
 
-    @Override
     public int compareTo(Seat o) {
       if (row != o.row) return row - o.row;
       return seatNumber - o.seatNumber;
@@ -98,12 +97,11 @@ public class TheMoviesLevelOneDivOne {
       current--;
     }
 
-    @Override
     public boolean hasNext() {
       return current + 1 < seats.length && seats[current + 1].row == rowNumber;
     }
 
-    @Override
+
     public Seat next() {
       if (!hasNext())
         throw new NoSuchElementException();
@@ -111,7 +109,7 @@ public class TheMoviesLevelOneDivOne {
       return seats[current];
     }
 
-    @Override
+
     public void remove() {
       throw new UnsupportedOperationException();
     }
@@ -134,12 +132,10 @@ public class TheMoviesLevelOneDivOne {
       this.numSeatsPerRow = numSeatsPerRow;
     }
 
-    @Override
     public boolean hasNext() {
       return current + 1 < numRows;
     }
 
-    @Override
     public Row next() {
       if (!hasNext())
         throw new NoSuchElementException();
@@ -148,7 +144,7 @@ public class TheMoviesLevelOneDivOne {
       return new Row(current + 1, seats, numSeatsPerRow);
     }
 
-    @Override
+
     public void remove() {
       throw new UnsupportedOperationException();
     }
