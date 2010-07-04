@@ -9,26 +9,26 @@ public class TheMoviesLevelOneDivOne {
   
   public class Seat implements Comparable<Seat> {
     public int row;
-    public int seat;
+    public int seatNumber;
 
     public Seat(int row, int seat) {
       this.row = row;
-      this.seat = seat;
+      this.seatNumber = seat;
     }
     
     public boolean equals(Object other) {
       Seat oseat = (Seat) other;
-      return row == oseat.row && seat == oseat.seat;
+      return row == oseat.row && seatNumber == oseat.seatNumber;
     }
     
     public int hashCode() {
-      return 442 * row + 26 * seat;
+      return 442 * row + 26 * seatNumber;
     }
 
     @Override
     public int compareTo(Seat o) {
       if (row != o.row) return row - o.row;
-      return seat - o.seat;
+      return seatNumber - o.seatNumber;
     }
   }
   
@@ -48,35 +48,42 @@ public class TheMoviesLevelOneDivOne {
 
 
     public int count() {
-      int count = 0;
+
       Iterator<Seat> seatIterator = iterator();
       
-      Seat seat = null;
+      if (!seatIterator.hasNext())
+        return numSeatsPerRow - 1;
       
-      // 3: 1 for 1-based, 2 for 2 seats. 1 + 2 = 3
-      int currentThreshold = 2;
+      int count = 0;      
+      
+      int minimumVacantSeatNumber = 3;
       
       while (seatIterator.hasNext()) {
-        seat = seatIterator.next();
         
-        if (seat.seat > currentThreshold)
-          count += seat.seat - currentThreshold;
-
+        Seat seat = seatIterator.next();
+        
+        if (seat.seatNumber >= minimumVacantSeatNumber)
+          count += (seat.seatNumber - minimumVacantSeatNumber + 1);
      
-        // add 2 since we want a pair of seats
-        currentThreshold = seat.seat + 2;        
+        // add 3 since we want a pair of seats, plus the next full seat needs
+        // to be at least one past that (assuming there are more full seats
+        // on this row)
+        minimumVacantSeatNumber = seat.seatNumber + 3;        
         
+        // any more seats on this row?
         if (!seatIterator.hasNext()) {
-          if (seat.seat > currentThreshold)
-            count += seat.seat - currentThreshold;
-          else if (seat.seat + 2 <= numSeatsPerRow)
-            count += (numSeatsPerRow - seat.seat - 1);
+
+          // to handle the case of the end of the row, think of there being a 
+          // final phantom seat after the real final seat, and this phantom
+          // final seat is filled.
+          int phantomFinalSeatPosition = numSeatsPerRow + 1;
+          if (minimumVacantSeatNumber <= phantomFinalSeatPosition)
+            // yes, add those pairs to our count
+            count += (phantomFinalSeatPosition - minimumVacantSeatNumber + 1);
             
         }
 
       }
-      
-      if (seat == null) count = numSeatsPerRow - 1;
       
       return count;
     }
